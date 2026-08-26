@@ -1,0 +1,27 @@
+import type { Genre, GenreId, E2EPlan } from "../engine/types";
+import { soundHunt, audit as auditSoundHunt } from "./soundHunt";
+import { echoWords, audit as auditEchoWords } from "./echoWords";
+import { wordSnap, audit as auditWordSnap } from "./wordSnap";
+import { storyGap, audit as auditStoryGap } from "./storyGap";
+import { readAndAnswer, audit as auditReadAndAnswer } from "./readAndAnswer";
+import { spellIt, audit as auditSpellIt } from "./spellIt";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyGenre = Genre<any, any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const withHooks = (g: AnyGenre, e2e: E2EPlan, audit?: (item: any) => string): AnyGenre => ({ ...g, e2e, audit: audit ?? g.audit });
+
+export const GENRES: Record<GenreId, AnyGenre> = {
+  soundHunt: withHooks(soundHunt, { kind: "options", pick: 1 }, auditSoundHunt),
+  echoWords: withHooks(echoWords, { kind: "options", pick: 1 }, auditEchoWords),
+  wordSnap: withHooks(wordSnap, { kind: "options", pick: 1 }, auditWordSnap),
+  storyGap: withHooks(storyGap, { kind: "options", pick: 1 }, auditStoryGap),
+  readAndAnswer: withHooks(readAndAnswer, { kind: "options", pick: 1 }, auditReadAndAnswer),
+  // spellIt's letter pad reuses the sequence recipe: tap one letter, then Done.
+  spellIt: withHooks(spellIt, { kind: "sequence", taps: 1 }, auditSpellIt),
+};
+
+/** Spec order — the order genres appear in Level 1 and on the parent page. */
+export const GENRE_LIST: GenreId[] = [
+  "soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer", "spellIt",
+];
