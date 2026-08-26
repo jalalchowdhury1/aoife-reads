@@ -45,6 +45,16 @@ const REAL = new Set([
   "weep", "barn", "darn", "yarn", "born", "corn", "horn", "morn", "torn", "worn", "dirt", "girt",
   "hurt", "curt", "burn", "turn", "hike", "bike", "like", "mike", "pike", "dine", "fine", "line",
   "mine", "nine", "pine", "vine", "wine", "bone", "cone", "gone", "hone", "tone", "zone",
+  // 2026-08-26 self-play sweep: words the onset+rime tables can actually assemble
+  "mud", "bud", "dud", "cud", "rib", "bib", "fib", "jib", "nib", "dim", "him", "rim", "vim",
+  "tad", "fad", "dip", "hip", "lip", "nip", "pip", "rip", "sip", "tip", "kip", "pop", "top",
+  "hop", "mop", "cop", "bop", "sop", "jab", "tab", "cab", "dab", "gab", "lab", "nab", "gun",
+  "peg", "beg", "keg", "leg", "gosh", "posh", "mosh", "nosh", "dusk", "husk", "musk", "tusk",
+  "gilt", "hilt", "jilt", "lilt", "milt", "silt", "tilt", "wilt", "lest", "gest", "vamp",
+  "lane", "mane", "pane", "plane", "shake", "blake", "bloke", "shale", "snail", "jail",
+  "frail", "plain", "twain", "nerd", "herd", "gleed", "shone", "shore", "glade", "plaid",
+  "snide", "pride", "smote", "dote", "note", "mote", "vote", "rote", "lobe", "job", "gob",
+  "rod", "nod", "pod", "sod", "god", "mod", "dun", "jut", "nut", "gut", "hut", "rut", "mut",
 ]);
 
 const B: Record<number, { onsets: string[]; rimes: string[] }> = {
