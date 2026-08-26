@@ -224,13 +224,12 @@ describe("currentPosition", () => {
 });
 
 describe("currentPosition against the real LEVELS registry", () => {
-  it("stays on the last released part once every Level 1 part is complete (no next level exists yet)", () => {
+  it("exposes Level 2 (Test Day) once every Level 1 part is complete — and never the unreleased QA level", () => {
     const level1Complete = LEVELS[0].parts.map((part) =>
       makeSession({ level: 1, part: part.id, complete: true, blocks: part.blocks.map(() => ({} as never)) })
     );
     const released = LEVELS.filter((l) => l.released !== false);
-    const pos = currentPosition(released, level1Complete);
-    expect(pos.level).toBe(1); // the QA level (99, unreleased) must never surface
+    expect(currentPosition(released, level1Complete)).toEqual({ level: 2, part: "A", blockIndex: 0 });
   });
 
   it("stays on Level 1 while any of its parts is still incomplete", () => {

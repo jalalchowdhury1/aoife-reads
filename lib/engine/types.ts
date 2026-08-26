@@ -1,9 +1,12 @@
 import type { QualityFlag } from "./quality";
 
 export type GenreId =
-  | "soundHunt" | "echoWords"                     // decoding
+  | "soundHunt" | "echoWords"                     // decoding (solo practice)
   | "wordSnap" | "storyGap" | "readAndAnswer"     // comprehension
-  | "spellIt";                                    // spelling
+  | "spellIt"                                     // spelling (solo practice)
+  // Actual-format, parent-scored subtests ("Test Day with a Grown-Up"):
+  // she reads aloud / writes on paper, the grown-up taps got-it / not-yet.
+  | "readAloud" | "soundItOut" | "readToMe" | "spellOnPaper";
 export type Domain = "DEC" | "CMP" | "SPL";
 // 1-10 is the standard ramp every genre authors by default. A genre may widen
 // past 10 via Genre.maxDifficulty ONLY after real data shows she has hit the

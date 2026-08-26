@@ -159,3 +159,14 @@ export const echoWords: Genre<ReadingItem, number> = {
   timing: { kind: "none" },
   mode: "staircase",
 };
+
+/** A pseudoword target for the parent-scored read-aloud genre (soundItOut).
+ * Uses a shifted seed stream so its items never mirror this genre's. */
+export function pseudoTarget(seed: number, dIn: Difficulty): { word: string; rime: string | null } {
+  const d = clampToBase(dIn);
+  const rng = makeRng(seed + 777_777);
+  if (d === 10) return { word: makeTwoSyllable(rng), rime: null };
+  const band = B[d];
+  const w = makeWord(rng, band);
+  return { word: w, rime: band.rimes.find((r) => w.endsWith(r)) ?? null };
+}

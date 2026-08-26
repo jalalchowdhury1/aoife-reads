@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import type { GenreId, GenreViewProps } from "@/lib/engine/types";
 import { ReadingChoiceView } from "./ReadingChoiceView";
 import { SpellItView } from "./SpellItView";
+import { ExaminerView } from "./ExaminerView";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const VIEWS: Record<GenreId, ComponentType<GenreViewProps<any, any>>> = {
@@ -11,4 +12,8 @@ export const VIEWS: Record<GenreId, ComponentType<GenreViewProps<any, any>>> = {
   storyGap: ReadingChoiceView,
   readAndAnswer: ReadingChoiceView,
   spellIt: SpellItView,
+  readAloud: ExaminerView,
+  soundItOut: ExaminerView,
+  readToMe: ExaminerView,
+  spellOnPaper: ExaminerView,
 };

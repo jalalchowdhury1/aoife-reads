@@ -15,12 +15,28 @@ as a fork of the aoife-puzzles engine, for the "achievement door" to Davidson Yo
 
 Unlike the WISC-prep app there is NO coaching-ethics tension here: achievement tests measure
 LEARNED skills, so practicing reading and spelling is simply homeschooling (it also feeds the
-RI homeschool progress report). We still never copy WIAT/WJ items — formats are cousins.
+RI homeschool progress report). **Owner directive 2026-08-26: "make it the actual test" — the
+measurement core uses the REAL WIAT/WJ administration FORMATS** (Level 2 "Test Day with a
+Grown-Up": she reads aloud / writes on paper, the parent scores ✓/✗ like the examiner). We
+still never copy actual WIAT/WJ ITEMS — every word list, pseudoword, passage, and dictation
+sentence is ours; only the format is the real test's.
 
 Research digest: `docs/research/2026-08-26-reading-app-research.md` (4 Perplexity threads).
 Live: **https://aoife-reads.vercel.app** · repo `jalalchowdhury1/aoife-reads` (public).
 
-### The six genres (lib/genres/) — the show-vs-speak split is LOAD-BEARING
+### Ten genres (lib/genres/) — six SOLO games + four ACTUAL-format parent-scored subtests
+
+**Actual-format (ExaminerView: child-facing easel + muted grown-up strip with the expected
+answer and ✓/✗; response = the parent's judgement, like the examiner's 1/0):**
+
+| id | kid title | domain | actual format of |
+|---|---|---|---|
+| readAloud | Read It Out Loud | DEC | WIAT Word Reading / WJ Letter-Word ID: graded list read aloud (d1 = letter names → d10 = grade-4/5 words) |
+| soundItOut | Sound It Out | DEC | WIAT Pseudoword Decoding / WJ Word Attack: made-up words read aloud; the strip shows a rhyme hint ("plide — rhymes with slide") |
+| readToMe | Read To Me | CMP | WIAT Reading Comprehension: passage read ALOUD, grown-up asks the printed question, open answer, look-back allowed (reuses the graded passage bank) |
+| spellOnPaper | Spelling Test | SPL | WIAT/WJ Spelling: "word… sentence… word" dictation, written on PAPER, parent-marked (also exercises the handwriting the Written composite needs) |
+
+### The six solo genres — the show-vs-speak split is LOAD-BEARING
 
 | id | kid title | domain | what is SHOWN | what is SPOKEN | cousin of |
 |---|---|---|---|---|---|
@@ -53,9 +69,10 @@ gate all inherited — see that repo's AGENTS.md §2 for the deep description). 
 - localStorage keys = `aoife-reads:*`.
 - No speed-block genres (SPEED_GENRES empty; speed badges retired).
 - `lib/engine/scale.ts` SCALE_CHANGES starts empty (original ramps).
-- Levels: 1 = "Find Your Reading Powers" diagnostic (Part A Sounds and Words: soundHunt,
-  echoWords, wordSnap · Part B Stories and Spelling: storyGap, readAndAnswer, spellIt;
-  teaching 2, feedback none, fun off, everything starts d1) · 99 = hidden QA level.
+- Levels: 1 = "Find Your Reading Powers" solo diagnostic (Part A soundHunt/echoWords/wordSnap ·
+  Part B storyGap/readAndAnswer/spellIt; teaching 2, feedback none, fun off, starts d1) ·
+  2 = "Test Day with a Grown-Up" (readAloud+soundItOut · readToMe+spellOnPaper; parent-scored,
+  test-day calm, unlocks after Level 1) · 99 = hidden QA level (all 10 genres).
 
 ## 3. Run / test / deploy
 

@@ -5,6 +5,10 @@ import { wordSnap, audit as auditWordSnap } from "./wordSnap";
 import { storyGap, audit as auditStoryGap } from "./storyGap";
 import { readAndAnswer, audit as auditReadAndAnswer } from "./readAndAnswer";
 import { spellIt, audit as auditSpellIt } from "./spellIt";
+import { readAloud, audit as auditReadAloud } from "./readAloud";
+import { soundItOut, audit as auditSoundItOut } from "./soundItOut";
+import { readToMe, audit as auditReadToMe } from "./readToMe";
+import { spellOnPaper, audit as auditSpellOnPaper } from "./spellOnPaper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyGenre = Genre<any, any>;
@@ -19,9 +23,16 @@ export const GENRES: Record<GenreId, AnyGenre> = {
   readAndAnswer: withHooks(readAndAnswer, { kind: "options", pick: 1 }, auditReadAndAnswer),
   // spellIt's letter pad reuses the sequence recipe: tap one letter, then Done.
   spellIt: withHooks(spellIt, { kind: "sequence", taps: 1 }, auditSpellIt),
+  // Actual-format, parent-scored subtests: one tap on the grown-up strip
+  // answers the item, so the tapOnly recipe drives them in e2e.
+  readAloud: withHooks(readAloud, { kind: "tapOnly" }, auditReadAloud),
+  soundItOut: withHooks(soundItOut, { kind: "tapOnly" }, auditSoundItOut),
+  readToMe: withHooks(readToMe, { kind: "tapOnly" }, auditReadToMe),
+  spellOnPaper: withHooks(spellOnPaper, { kind: "tapOnly" }, auditSpellOnPaper),
 };
 
 /** Spec order — the order genres appear in Level 1 and on the parent page. */
 export const GENRE_LIST: GenreId[] = [
   "soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer", "spellIt",
+  "readAloud", "soundItOut", "readToMe", "spellOnPaper",
 ];

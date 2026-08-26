@@ -207,3 +207,81 @@ describe("spellIt fairness", () => {
     }
   });
 });
+
+// ---- actual-format, parent-scored genres ----------------------------------
+import { readAloud, READ_ALOUD_TIERS } from "../readAloud";
+import { soundItOut } from "../soundItOut";
+import { readToMe } from "../readToMe";
+import { spellOnPaper } from "../spellOnPaper";
+import type { ExaminerItem } from "../examinerItem";
+
+describe("examiner-genre fairness", () => {
+  it("readAloud: tiers 1-10 each hold at least 8 unique, letters-only entries; ids unique across the bank", () => {
+    const all: string[] = [];
+    for (const d of DIFFICULTIES) {
+      expect(READ_ALOUD_TIERS[d].length, `d${d}`).toBeGreaterThanOrEqual(8);
+      for (const w of READ_ALOUD_TIERS[d]) {
+        expect(w).toMatch(/^[a-z]+$/);
+        all.push(w);
+      }
+    }
+    expect(new Set(all).size).toBe(all.length);
+  });
+
+  it("every examiner item carries the record-form essentials: an expected answer and a grown-up prompt (a parent scoring blind would be guessing)", () => {
+    for (const d of DIFFICULTIES) {
+      for (const seed of [1, 50, 200]) {
+        for (const g of [readAloud, soundItOut, readToMe, spellOnPaper]) {
+          const item = g.generate(seed, d) as ExaminerItem;
+          expect(item.expected.length, `${g.id} d${d}`).toBeGreaterThan(0);
+          expect(item.parentPrompt.length, `${g.id} d${d}`).toBeGreaterThan(10);
+          expect(Boolean(item.stimulus) || Boolean(item.speak), `${g.id} d${d} needs a stimulus or dictation`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("examiner scoring credits exactly the grown-up's judgement: true = 1, false/null = 0", () => {
+    const item = readAloud.generate(1, 2) as ExaminerItem;
+    expect(readAloud.score(item, true)).toEqual({ points: 1, max: 1, correct: true });
+    expect(readAloud.score(item, false)).toEqual({ points: 0, max: 1, correct: false });
+    expect(readAloud.score(item, null)).toEqual({ points: 0, max: 1, correct: false });
+  });
+
+  it("soundItOut targets are made-up (never a blocklisted real word) and every rime hint names a real rhyme", () => {
+    for (const d of DIFFICULTIES) {
+      for (const seed of Array.from({ length: 200 }, (_, i) => i + 1)) {
+        const item = soundItOut.generate(seed, d) as ExaminerItem;
+        expect(item.stimulus).toMatch(/^[a-z]{2,9}$/);
+        expect(item.expected).toContain(item.stimulus!);
+      }
+    }
+  });
+
+  it("spellOnPaper dictation speaks the word twice with its sentence between (the real dictation formula)", () => {
+    for (const d of DIFFICULTIES) {
+      const item = spellOnPaper.generate(3, d) as ExaminerItem;
+      const word = item.expected;
+      const count = (item.speak!.toLowerCase().match(new RegExp(`\\b${word}\\b`, "g")) ?? []).length;
+      expect(count, `d${d} ${word}`).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("readToMe reuses the graded passage bank verbatim, exposing the credited answer to the grown-up", () => {
+    for (const d of DIFFICULTIES) {
+      const item = readToMe.generate(5, d) as ExaminerItem;
+      const src = READ_ANSWER_BANK.find((b) => `rtm-${b.id}` === item.bankId)!;
+      expect(item.stimulus).toBe(src.passage);
+      expect(item.question).toBe(src.question);
+      expect(item.expected).toBe(src.options[src.answer]);
+    }
+  });
+
+  it("examiner genres are deterministic", () => {
+    for (const g of [readAloud, soundItOut, readToMe, spellOnPaper]) {
+      for (const d of DIFFICULTIES) {
+        expect(JSON.stringify(g.generate(11, d))).toBe(JSON.stringify(g.generate(11, d)));
+      }
+    }
+  });
+});

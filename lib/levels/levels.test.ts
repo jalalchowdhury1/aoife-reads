@@ -46,8 +46,9 @@ describe("Level 1 (Find Your Reading Powers — the diagnostic)", () => {
     expect(level1.fun).toBe(false);
   });
 
-  it("uses every genre exactly once across its two parts", () => {
-    usesEveryGenreOnce(level1);
+  it("uses each of the six SOLO genres exactly once across its two parts", () => {
+    const used = level1.parts.flatMap((p) => p.blocks.map((b) => b.genre));
+    expect(used).toEqual(["soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer", "spellIt"]);
     expect(level1.parts.map((p) => p.id)).toEqual(["A", "B"]);
   });
 
@@ -57,6 +58,22 @@ describe("Level 1 (Find Your Reading Powers — the diagnostic)", () => {
         expect(block.start, block.genre).toBeUndefined();
       }
     }
+  });
+});
+
+describe("Level 2 (Test Day with a Grown-Up — actual-format, parent-scored)", () => {
+  const level2 = LEVELS.find((l) => l.id === 2)!;
+
+  it("uses exactly the four examiner genres, none of the solo ones", () => {
+    const used = level2.parts.flatMap((p) => p.blocks.map((b) => b.genre));
+    expect(used).toEqual(["readAloud", "soundItOut", "readToMe", "spellOnPaper"]);
+  });
+
+  it("is test-day calm: no feedback, no fun layer, no teaching items, everything starts d1", () => {
+    expect(level2.feedback).toBe("none");
+    expect(level2.fun).toBe(false);
+    expect(level2.teachingItems).toBe(0);
+    for (const part of level2.parts) for (const b of part.blocks) expect(b.start).toBeUndefined();
   });
 });
 
@@ -81,7 +98,7 @@ describe("Level 99 (hidden QA level)", () => {
 });
 
 describe("release gating", () => {
-  it("only Level 1 is released; the QA level (99) never is", () => {
-    expect(RELEASED_LEVELS.map((l) => l.id)).toEqual([1]);
+  it("Levels 1 and 2 are released; the QA level (99) never is", () => {
+    expect(RELEASED_LEVELS.map((l) => l.id)).toEqual([1, 2]);
   });
 });

@@ -14,15 +14,15 @@ export interface DomainStat { value: number | null; z: number | null; flag: "str
 export interface ProfileFlag { sessionId: string; part: string; genre: GenreId; code: QualityFlagCode; detail: string }
 export interface Profile { sessions: number; genres: Partial<Record<GenreId, GenreStats>>; domains: Record<Domain, DomainStat>; bundles: { egai: number | null; cpi: number | null }; computedAt: string; flags: ProfileFlag[] }
 export const DOMAIN_GENRES: Record<Domain, GenreId[]> = {
-  DEC: ["soundHunt", "echoWords"],
-  CMP: ["wordSnap", "storyGap", "readAndAnswer"],
-  SPL: ["spellIt"],
+  DEC: ["soundHunt", "echoWords", "readAloud", "soundItOut"],
+  CMP: ["wordSnap", "storyGap", "readAndAnswer", "readToMe"],
+  SPL: ["spellIt", "spellOnPaper"],
 };
 // Achievement-style bundles mirroring the WIAT-4 K-1 composites (research
 // digest): Reading = word reading + comprehension; Written = spelling.
 // (Alphabet Writing Fluency is handwriting — practiced on paper, not here.)
-export const READING: GenreId[] = ["soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer"];
-export const WRITTEN: GenreId[] = ["spellIt"];
+export const READING: GenreId[] = ["soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer", "readAloud", "soundItOut", "readToMe"];
+export const WRITTEN: GenreId[] = ["spellIt", "spellOnPaper"];
 // Kept for API compatibility with the ported parent page.
 export const EGAI = READING;
 export const CPI = WRITTEN;

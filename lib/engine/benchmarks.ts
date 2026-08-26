@@ -104,6 +104,37 @@ export const BENCHMARKS: Partial<Record<GenreId, GenreBenchmark>> = {
   },
 };
 
+// Actual-format, parent-scored subtests share their solo counterparts' ladders.
+BENCHMARKS.readAloud = {
+  genre: "readAloud",
+  caveat: "Parent-scored read-aloud — the closest format to the real Word Reading subtest.",
+  bands: [
+    { dMin: 1, dMax: 1, skill: "Name letters", typicalAge: { lo: 4, hi: 6 }, basis: PHONICS },
+    { dMin: 2, dMax: 3, skill: "Read CVC words aloud", typicalAge: { lo: 5, hi: 7 }, basis: PHONICS },
+    { dMin: 4, dMax: 4, skill: "Digraphs and blends aloud", typicalAge: { lo: 6, hi: 7 }, basis: PHONICS },
+    { dMin: 5, dMax: 6, skill: "Silent-e and vowel-team words aloud", typicalAge: { lo: 6, hi: 8 }, basis: PHONICS },
+    { dMin: 7, dMax: 7, skill: "Two-syllable words aloud", typicalAge: { lo: 7, hi: 8 }, basis: PHONICS },
+    { dMin: 8, dMax: 8, skill: "Common irregular words (said, laugh)", typicalAge: { lo: 6, hi: 8 }, basis: PHONICS },
+    { dMin: 9, dMax: 9, skill: "Grade-3/4 long words aloud", typicalAge: { lo: 8, hi: 10 }, basis: PHONICS },
+    { dMin: 10, dMax: 10, skill: "Grade-4/5 words (mysterious, ancient)", typicalAge: { lo: 9, hi: 11 }, basis: PHONICS },
+  ],
+};
+BENCHMARKS.soundItOut = {
+  genre: "soundItOut",
+  caveat: "Parent-scored pseudoword reading — the real Word Attack / Pseudoword Decoding format.",
+  bands: BENCHMARKS.echoWords!.bands,
+};
+BENCHMARKS.readToMe = {
+  genre: "readToMe",
+  caveat: "Read aloud + grown-up-asked questions — the real passage-comprehension administration.",
+  bands: BENCHMARKS.readAndAnswer!.bands,
+};
+BENCHMARKS.spellOnPaper = {
+  genre: "spellOnPaper",
+  caveat: "Dictation to PAPER, parent-marked — the real Spelling format, handwriting included.",
+  bands: BENCHMARKS.spellIt!.bands,
+};
+
 export function benchmarkAt(genre: GenreId, d: number): DifficultyBenchmark | null {
   const gb = BENCHMARKS[genre];
   if (!gb) return null;
