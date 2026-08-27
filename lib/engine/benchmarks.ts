@@ -28,6 +28,7 @@ export interface GenreBenchmark {
 
 const PHONICS = "phonics scope-and-sequence: CVC end-K, digraphs/blends gr1, silent-e end gr1, vowel teams + r-controlled end gr2";
 const TEXT = "text-complexity ladder: sentence length, vocabulary grade, and inference demand by grade";
+const MATHLADDER = "K-5 computation standards ladder: counting and facts K-1, regrouping gr2, times tables and division facts gr3, multi-digit gr4";
 const SPELL = "spelling-pattern sequence: CVC K, digraphs/blends gr1, silent-e/teams gr1-2, endings gr2, multisyllabic gr2-3";
 
 export const BENCHMARKS: Partial<Record<GenreId, GenreBenchmark>> = {
@@ -133,6 +134,46 @@ BENCHMARKS.spellOnPaper = {
   genre: "spellOnPaper",
   caveat: "Dictation to PAPER, parent-marked — the real Spelling format, handwriting included.",
   bands: BENCHMARKS.spellIt!.bands,
+};
+// Mathematics composite (2026-08-27): grade-anchored bands for the solo
+// ladders; the administered forms share them (same generators).
+BENCHMARKS.numberCrunch = {
+  genre: "numberCrunch",
+  bands: [
+    { dMin: 1, dMax: 1, skill: "Count objects to 5", typicalAge: { lo: 3, hi: 5 }, basis: MATHLADDER },
+    { dMin: 2, dMax: 3, skill: "Addition within 10", typicalAge: { lo: 5, hi: 6 }, basis: MATHLADDER },
+    { dMin: 4, dMax: 4, skill: "Subtraction within 10", typicalAge: { lo: 5, hi: 7 }, basis: MATHLADDER },
+    { dMin: 5, dMax: 5, skill: "Add and subtract within 20", typicalAge: { lo: 6, hi: 7 }, basis: MATHLADDER },
+    { dMin: 6, dMax: 6, skill: "Two-digit sums, no regrouping", typicalAge: { lo: 6, hi: 8 }, basis: MATHLADDER },
+    { dMin: 7, dMax: 7, skill: "Two-digit sums WITH regrouping", typicalAge: { lo: 7, hi: 8 }, basis: MATHLADDER },
+    { dMin: 8, dMax: 8, skill: "Times tables (2 to 5)", typicalAge: { lo: 8, hi: 9 }, basis: MATHLADDER },
+    { dMin: 9, dMax: 9, skill: "Bigger times tables + division facts", typicalAge: { lo: 8, hi: 10 }, basis: MATHLADDER },
+    { dMin: 10, dMax: 10, skill: "Three-digit sums + 2-digit multiplication", typicalAge: { lo: 9, hi: 10 }, basis: MATHLADDER },
+  ],
+};
+BENCHMARKS.storyProblems = {
+  genre: "storyProblems",
+  bands: [
+    { dMin: 1, dMax: 1, skill: "Counting story", typicalAge: { lo: 3, hi: 5 }, basis: MATHLADDER },
+    { dMin: 2, dMax: 3, skill: "One-step stories within 10", typicalAge: { lo: 5, hi: 7 }, basis: MATHLADDER },
+    { dMin: 4, dMax: 4, skill: "One-step stories within 20", typicalAge: { lo: 6, hi: 7 }, basis: MATHLADDER },
+    { dMin: 5, dMax: 5, skill: "Two-step stories", typicalAge: { lo: 7, hi: 8 }, basis: MATHLADDER },
+    { dMin: 6, dMax: 6, skill: "Equal-groups stories (times idea)", typicalAge: { lo: 7, hi: 9 }, basis: MATHLADDER },
+    { dMin: 7, dMax: 7, skill: "Sharing stories (division idea)", typicalAge: { lo: 7, hi: 9 }, basis: MATHLADDER },
+    { dMin: 8, dMax: 8, skill: "Money and change stories", typicalAge: { lo: 7, hi: 9 }, basis: MATHLADDER },
+    { dMin: 9, dMax: 9, skill: "Multi-step stories", typicalAge: { lo: 8, hi: 10 }, basis: MATHLADDER },
+    { dMin: 10, dMax: 10, skill: "Halves and quarters stories", typicalAge: { lo: 8, hi: 10 }, basis: MATHLADDER },
+  ],
+};
+BENCHMARKS.mathOnPaper = {
+  genre: "mathOnPaper",
+  caveat: "Administered form of the same computation ladder as Number Crunch.",
+  bands: BENCHMARKS.numberCrunch!.bands,
+};
+BENCHMARKS.mathOutLoud = {
+  genre: "mathOutLoud",
+  caveat: "Administered form of the same story ladder as Story Problems.",
+  bands: BENCHMARKS.storyProblems!.bands,
 };
 
 export function benchmarkAt(genre: GenreId, d: number): DifficultyBenchmark | null {

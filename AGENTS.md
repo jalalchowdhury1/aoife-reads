@@ -7,8 +7,8 @@
 ## 1. What this is
 
 A tablet (iPad) web game for Aoife (born 2021-01-11) that TRAINS and approximately MEASURES
-the school skills behind the WIAT-4 / WJ **Reading** and **Written Language** achievement
-composites — reading (decoding, word reading, comprehension) and spelling. Built 2026-08-26
+the school skills behind the WIAT-4 / WJ **Reading**, **Written Language**, and (since
+2026-08-27) **Mathematics** achievement composites — reading, spelling, and math. Built 2026-08-26
 as a fork of the aoife-puzzles engine, for the "achievement door" to Davidson Young Scholars
 (145+ standard score on two composites; see the research digest). Mascot: **Ollie the owl 🦉**
 (Pip the fox stays with aoife-puzzles).
@@ -35,6 +35,8 @@ answer and ✓/✗; response = the parent's judgement, like the examiner's 1/0):
 | soundItOut | Sound It Out | DEC | WIAT Pseudoword Decoding / WJ Word Attack: made-up words read aloud; the strip shows a rhyme hint ("plide — rhymes with slide") |
 | readToMe | Read To Me | CMP | WIAT Reading Comprehension: passage read ALOUD, grown-up asks the printed question, open answer, look-back allowed (reuses the graded passage bank) |
 | spellOnPaper | Spelling Test | SPL | WIAT/WJ Spelling: "word… sentence… word" dictation, written on PAPER, parent-marked (also exercises the handwriting the Written composite needs) |
+| mathOnPaper | Math on Paper | MTH | WIAT Numerical Operations: the easel shows the problem, she works it on paper, parent-marked (2026-08-27) |
+| mathOutLoud | Math Out Loud | MTH | WIAT Math Problem Solving: Ollie reads the story aloud, paper allowed, open answer, parent-marked (2026-08-27) |
 
 ### The six solo genres — the show-vs-speak split is LOAD-BEARING
 
@@ -46,10 +48,13 @@ answer and ✓/✗; response = the parent's judgement, like the examiner's 1/0):
 | storyGap | Story Gap | CMP | sentence with a ___ gap | nothing | WJ Passage Comprehension (cloze) |
 | readAndAnswer | Read & Answer | CMP | passage + question | nothing | WIAT Reading Comprehension passages |
 | spellIt | Spell It | SPL | letter pad only (never the word) | "word… sentence… word" dictation | WIAT/WJ Spelling |
+| numberCrunch | Number Crunch | MTH | the computation (or emoji to count) | nothing | WIAT Numerical Operations ladder (2026-08-27) |
+| storyProblems | Story Problems | MTH | the story text | the story (TTS removes the reading load, like the real examiner) | WIAT Math Problem Solving (2026-08-27) |
 
-Domains: DEC (decoding), CMP (reading comprehension), SPL (spelling). Bundles in profile.ts:
-READING = soundHunt+echoWords+wordSnap+storyGap+readAndAnswer, WRITTEN = spellIt (exported as
-EGAI/CPI aliases so the ported parent page keeps working). **Alphabet Writing Fluency (the
+Domains: DEC (decoding), CMP (reading comprehension), SPL (spelling), MTH (math, 2026-08-27).
+Bundles in profile.ts: READING, WRITTEN, MATH (EGAI/CPI aliases keep the ported parent page
+working). The two MTH ladders live in `lib/genres/mathItem.ts` (generated, no banks; fairness
+recomputes every printed problem in `lib/genres/fairness/math.test.ts`). **Alphabet Writing Fluency (the
 other half of the K-1 Written composite) is HANDWRITING — out of app scope, practice on paper.**
 
 Ramps follow the phonics scope-and-sequence and text-complexity ladders in the digest
@@ -69,10 +74,16 @@ gate all inherited — see that repo's AGENTS.md §2 for the deep description). 
 - localStorage keys = `aoife-reads:*`.
 - No speed-block genres (SPEED_GENRES empty; speed badges retired).
 - `lib/engine/scale.ts` SCALE_CHANGES starts empty (original ramps).
-- Levels: 1 = "Find Your Reading Powers" solo diagnostic (Part A soundHunt/echoWords/wordSnap ·
-  Part B storyGap/readAndAnswer/spellIt; teaching 2, feedback none, fun off, starts d1) ·
-  2 = "Test Day with a Grown-Up" (readAloud+soundItOut · readToMe+spellOnPaper; parent-scored,
-  test-day calm, unlocks after Level 1) · 99 = hidden QA level (all 10 genres).
+- Levels: 1 = "Find Your Reading Powers" solo reading diagnostic · 2 = "Count with Ollie"
+  solo MATH diagnostic (numberCrunch+storyProblems; same diagnostic knobs; 2026-08-27) ·
+  3 = "Test Day with a Grown-Up" (moved from id 2 on 2026-08-27 with ZERO plays recorded:
+  Part A readAloud+soundItOut · B readToMe+spellOnPaper · C mathOnPaper+mathOutLoud) ·
+  99 = hidden QA level (all 14 genres).
+- `/practice` = Rematches tab (ported aoife-puzzles decision #23, 2026-08-27): replays her
+  actual counted misses from SOLO genres only (EXAMINER_GENRES excluded — their response is
+  a grown-up's judgement), untimed, reveal on miss; sessions post as level 0 / part "P" with
+  `practice: true` and computeProfile DROPS them — practice never inflates the Ages tab.
+  Home shows "⭐ Rematches (n)" only when the queue is non-empty (GET /api/practice).
 
 ## 3. Run / test / deploy
 
@@ -121,6 +132,14 @@ here too: `vercel env add` via stdin can mark vars sensitive → `vercel env pul
 
 ## 6. State / TODO
 
+- 2026-08-27 (~4 AM overnight build): **v0.3.0 — the Mathematics composite + Practice tab**
+  (spec `docs/superpowers/specs/2026-08-27-achieve2-math-design.md`). Four MTH genres (two
+  solo numpad games, two examiner administrations sharing the same generated ladders), MTH
+  domain + MATH bundle + grade-anchored math benchmarks, Level 2 "Count with Ollie", Test Day
+  moved to id 3 + Part C "Math Day", NumPadView, `/practice` rematch tab (profile-excluded),
+  math fairness sweep (recomputes every printed problem, regrouping bands verified). The
+  Alphabet Writing Fluency paper worksheets were generated the same night to Drive
+  `My Drive/Claude-PDFs/` (the parked idea below is now DONE).
 - 2026-08-26: v0.1.0 built — 6 genres, Level 1 diagnostic, parent dashboard w/ grade-anchored
   Ages tab, 246 unit tests + 28-rule fairness sweep + e2e green. First release pending
   self-play TTS check (echoWords pronunciation, spellIt dictation pacing) on prod.

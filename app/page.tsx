@@ -6,6 +6,7 @@ import { RELEASED_LEVELS as LEVELS } from "@/lib/levels";
 import { loadSessions, currentPosition, syncState, flushOutbox, fetchServerState, mergeSessions } from "@/lib/engine/storage";
 import type { LevelConfig, SessionRecord } from "@/lib/engine/types";
 import { dayStreak, totalStars } from "@/lib/engine/rewards";
+import { practiceQueue, type PracticeRef } from "@/lib/engine/practice";
 import { BigButton } from "@/components/BigButton";
 
 function isPartComplete(sessions: SessionRecord[], level: number, part: string): boolean {
@@ -40,6 +41,9 @@ export default function HomePage() {
   // page is running on local storage alone. See AGENTS.md §2/§5: the server
   // is the source of truth for position; local is a mirror/offline fallback.
   const [serverOffline, setServerOffline] = useState(false);
+  // Rematches waiting in the Practice tab (ported decision #23). Server
+  // first, local mirror as the offline fallback — same as position.
+  const [rematches, setRematches] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -70,6 +74,14 @@ export default function HomePage() {
       setStars(totalStars(sessions));
       setSynced(syncState() === "synced");
       setServerOffline(!state);
+      try {
+        const res = await fetch("/api/practice", { cache: "no-store" });
+        const body = (await res.json()) as { ok?: boolean; pending?: PracticeRef[] };
+        if (cancelled) return;
+        setRematches(body.ok && Array.isArray(body.pending) ? body.pending.length : practiceQueue(sessions).length);
+      } catch {
+        if (!cancelled) setRematches(practiceQueue(sessions).length);
+      }
       setReady(true);
     });
     return () => {
@@ -130,9 +142,16 @@ export default function HomePage() {
         </div>
       )}
 
-      <BigButton onClick={() => router.push("/stickers")} tone="plain">
-        Sticker Book
-      </BigButton>
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        <BigButton onClick={() => router.push("/stickers")} tone="plain">
+          Sticker Book
+        </BigButton>
+        {rematches > 0 && (
+          <BigButton onClick={() => router.push("/practice")} tone="plain">
+            ⭐ Rematches ({rematches})
+          </BigButton>
+        )}
+      </div>
 
       <div className="flex items-center gap-1">
         <span className="text-2xl" aria-label={synced ? "Saved" : "Will save when back online"}>

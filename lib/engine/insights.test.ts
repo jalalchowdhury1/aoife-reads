@@ -157,7 +157,7 @@ describe("computeInsights", () => {
   });
 
   it("rolls domains and bundles up via computeProfile", () => {
-    expect(insights.domains.map((d) => d.domain)).toEqual(["DEC", "CMP", "SPL"]);
+    expect(insights.domains.map((d) => d.domain)).toEqual(["DEC", "CMP", "SPL", "MTH"]);
   });
 
   it("produces one timeline entry per session", () => {

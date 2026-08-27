@@ -112,8 +112,9 @@ const DOMAIN_LABELS: Record<Domain, string> = {
   DEC: "Decoding",
   CMP: "Reading Comprehension",
   SPL: "Spelling",
+  MTH: "Math",
 };
-const DOMAIN_ORDER: Domain[] = ["DEC", "CMP", "SPL"];
+const DOMAIN_ORDER: Domain[] = ["DEC", "CMP", "SPL", "MTH"];
 
 // Bank-backed genres whose response IS a fixed multiple-choice pick — as
 // opposed to arithmetic, whose bankId points at a template with no single

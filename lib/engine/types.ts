@@ -6,8 +6,11 @@ export type GenreId =
   | "spellIt"                                     // spelling (solo practice)
   // Actual-format, parent-scored subtests ("Test Day with a Grown-Up"):
   // she reads aloud / writes on paper, the grown-up taps got-it / not-yet.
-  | "readAloud" | "soundItOut" | "readToMe" | "spellOnPaper";
-export type Domain = "DEC" | "CMP" | "SPL";
+  | "readAloud" | "soundItOut" | "readToMe" | "spellOnPaper"
+  // Mathematics composite (2026-08-27, spec 2026-08-27-achieve2-math-design.md):
+  // two solo games + the two actual-format parent-scored administrations.
+  | "numberCrunch" | "storyProblems" | "mathOnPaper" | "mathOutLoud";
+export type Domain = "DEC" | "CMP" | "SPL" | "MTH";
 // 1-10 is the standard ramp every genre authors by default. A genre may widen
 // past 10 via Genre.maxDifficulty ONLY after real data shows she has hit the
 // existing top (owner, 2026-08-23: "go beyond level 10 for those she has
@@ -89,6 +92,11 @@ export interface SessionRecord {
   id: string; level: number; part: string; startedAt: string; endedAt?: string;
   device: { ua: string; w: number; h: number };
   blocks: BlockRecord[]; complete: boolean; appVersion: string;
+  // Practice-tab replays of previously missed items (ported from
+  // aoife-puzzles decision #23, 2026-08-27): saved as level 0 / part "P".
+  // computeProfile drops practice sessions entirely — a redo win after the
+  // reveal proves learning, not ability.
+  practice?: boolean;
 }
 
 export interface BlockConfig {

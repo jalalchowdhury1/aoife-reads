@@ -61,19 +61,37 @@ describe("Level 1 (Find Your Reading Powers — the diagnostic)", () => {
   });
 });
 
-describe("Level 2 (Test Day with a Grown-Up — actual-format, parent-scored)", () => {
+describe("Level 2 (Count with Ollie — the Math composite's solo diagnostic, 2026-08-27)", () => {
   const level2 = LEVELS.find((l) => l.id === 2)!;
 
-  it("uses exactly the four examiner genres, none of the solo ones", () => {
+  it("uses exactly the two solo math genres in one short part", () => {
     const used = level2.parts.flatMap((p) => p.blocks.map((b) => b.genre));
-    expect(used).toEqual(["readAloud", "soundItOut", "readToMe", "spellOnPaper"]);
+    expect(used).toEqual(["numberCrunch", "storyProblems"]);
+    expect(level2.parts).toHaveLength(1);
+  });
+
+  it("is the ungraded diagnostic recipe: no feedback, fun off, teaching items on, starts d1", () => {
+    expect(level2.feedback).toBe("none");
+    expect(level2.fun).toBe(false);
+    expect(level2.teachingItems).toBe(2);
+    for (const part of level2.parts) for (const b of part.blocks) expect(b.start).toBeUndefined();
+  });
+});
+
+describe("Level 3 (Test Day with a Grown-Up — actual-format, parent-scored; moved from id 2 on 2026-08-27 with zero plays recorded)", () => {
+  const level3 = LEVELS.find((l) => l.id === 3)!;
+
+  it("uses exactly the six examiner genres across three parts (Reading, Written, Math)", () => {
+    const used = level3.parts.flatMap((p) => p.blocks.map((b) => b.genre));
+    expect(used).toEqual(["readAloud", "soundItOut", "readToMe", "spellOnPaper", "mathOnPaper", "mathOutLoud"]);
+    expect(level3.parts.map((p) => p.id)).toEqual(["A", "B", "C"]);
   });
 
   it("is test-day calm: no feedback, no fun layer, no teaching items, everything starts d1", () => {
-    expect(level2.feedback).toBe("none");
-    expect(level2.fun).toBe(false);
-    expect(level2.teachingItems).toBe(0);
-    for (const part of level2.parts) for (const b of part.blocks) expect(b.start).toBeUndefined();
+    expect(level3.feedback).toBe("none");
+    expect(level3.fun).toBe(false);
+    expect(level3.teachingItems).toBe(0);
+    for (const part of level3.parts) for (const b of part.blocks) expect(b.start).toBeUndefined();
   });
 });
 
@@ -98,7 +116,7 @@ describe("Level 99 (hidden QA level)", () => {
 });
 
 describe("release gating", () => {
-  it("Levels 1 and 2 are released; the QA level (99) never is", () => {
-    expect(RELEASED_LEVELS.map((l) => l.id)).toEqual([1, 2]);
+  it("Levels 1, 2 and 3 are released; the QA level (99) never is", () => {
+    expect(RELEASED_LEVELS.map((l) => l.id)).toEqual([1, 2, 3]);
   });
 });

@@ -9,6 +9,10 @@ import { readAloud, audit as auditReadAloud } from "./readAloud";
 import { soundItOut, audit as auditSoundItOut } from "./soundItOut";
 import { readToMe, audit as auditReadToMe } from "./readToMe";
 import { spellOnPaper, audit as auditSpellOnPaper } from "./spellOnPaper";
+import { numberCrunch, audit as auditNumberCrunch } from "./numberCrunch";
+import { storyProblems, audit as auditStoryProblems } from "./storyProblems";
+import { mathOnPaper, audit as auditMathOnPaper } from "./mathOnPaper";
+import { mathOutLoud, audit as auditMathOutLoud } from "./mathOutLoud";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyGenre = Genre<any, any>;
@@ -29,10 +33,23 @@ export const GENRES: Record<GenreId, AnyGenre> = {
   soundItOut: withHooks(soundItOut, { kind: "tapOnly" }, auditSoundItOut),
   readToMe: withHooks(readToMe, { kind: "tapOnly" }, auditReadToMe),
   spellOnPaper: withHooks(spellOnPaper, { kind: "tapOnly" }, auditSpellOnPaper),
+  // Mathematics composite (2026-08-27): two solo numpad games, two
+  // actual-format parent-scored administrations.
+  numberCrunch: withHooks(numberCrunch, { kind: "numpad" }, auditNumberCrunch),
+  storyProblems: withHooks(storyProblems, { kind: "numpad" }, auditStoryProblems),
+  mathOnPaper: withHooks(mathOnPaper, { kind: "tapOnly" }, auditMathOnPaper),
+  mathOutLoud: withHooks(mathOutLoud, { kind: "tapOnly" }, auditMathOutLoud),
 };
 
 /** Spec order — the order genres appear in Level 1 and on the parent page. */
 export const GENRE_LIST: GenreId[] = [
   "soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer", "spellIt",
-  "readAloud", "soundItOut", "readToMe", "spellOnPaper",
+  "numberCrunch", "storyProblems",
+  "readAloud", "soundItOut", "readToMe", "spellOnPaper", "mathOnPaper", "mathOutLoud",
+];
+
+/** Parent-scored administrations: the response is a grown-up's judgement, so
+ * the solo Practice tab can never replay them (lib/engine/practice.ts). */
+export const EXAMINER_GENRES: GenreId[] = [
+  "readAloud", "soundItOut", "readToMe", "spellOnPaper", "mathOnPaper", "mathOutLoud",
 ];

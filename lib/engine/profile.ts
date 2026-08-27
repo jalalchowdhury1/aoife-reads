@@ -17,18 +17,22 @@ export const DOMAIN_GENRES: Record<Domain, GenreId[]> = {
   DEC: ["soundHunt", "echoWords", "readAloud", "soundItOut"],
   CMP: ["wordSnap", "storyGap", "readAndAnswer", "readToMe"],
   SPL: ["spellIt", "spellOnPaper"],
+  MTH: ["numberCrunch", "storyProblems", "mathOnPaper", "mathOutLoud"],
 };
 // Achievement-style bundles mirroring the WIAT-4 K-1 composites (research
 // digest): Reading = word reading + comprehension; Written = spelling.
 // (Alphabet Writing Fluency is handwriting — practiced on paper, not here.)
 export const READING: GenreId[] = ["soundHunt", "echoWords", "wordSnap", "storyGap", "readAndAnswer", "readAloud", "soundItOut", "readToMe"];
 export const WRITTEN: GenreId[] = ["spellIt", "spellOnPaper"];
+// Mathematics composite (2026-08-27) = Numerical Operations + Math Problem
+// Solving, both solo and administered forms.
+export const MATH: GenreId[] = ["numberCrunch", "storyProblems", "mathOnPaper", "mathOutLoud"];
 // Kept for API compatibility with the ported parent page.
 export const EGAI = READING;
 export const CPI = WRITTEN;
 const SPEED_CEILING_PER_MIN: Partial<Record<GenreId, number>> = {};
 
-const DOMAIN_KEYS: Domain[] = ["DEC", "CMP", "SPL"];
+const DOMAIN_KEYS: Domain[] = ["DEC", "CMP", "SPL", "MTH"];
 const VC_GENRES = new Set<GenreId>([]); // no 2/1/0-scored genres in this app (all items are 1/0)
 
 function median(values: number[]): number {
@@ -60,8 +64,12 @@ function bundleValue(list: GenreId[], genres: Partial<Record<GenreId, GenreStats
 }
 
 export function computeProfile(sessions: SessionRecord[]): Profile {
+  // Practice-tab replays (ported decision #23) are dropped at the door: a
+  // redo win after the reveal proves learning, never ability — letting it in
+  // would slowly inflate her ceilings and the Ages tab.
+  const measured = sessions.filter((s) => !s.practice);
   // Old-scale results are mapped onto the current ramps first (lib/engine/scale.ts).
-  const sorted = sessions.map(remapSession).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
+  const sorted = measured.map(remapSession).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
   const genres: Partial<Record<GenreId, GenreStats>> = {};
   const msByGenre: Partial<Record<GenreId, number[]>> = {};
   const flags: ProfileFlag[] = [];

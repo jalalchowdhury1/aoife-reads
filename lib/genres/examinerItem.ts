@@ -16,6 +16,9 @@ export interface ExaminerItem {
   question?: string;
   /** What counts as correct — shown in the grown-up strip, never spoken. */
   expected: string;
+  /** Child-facing hint line under a dictated item (defaults to the spelling
+   * one in ExaminerView; math sets its own). */
+  childHint?: string;
   /** One-line instruction for the grown-up on this item. */
   parentPrompt: string;
 }

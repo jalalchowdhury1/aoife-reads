@@ -9,8 +9,9 @@ const DOMAIN_LABELS: Record<Domain, string> = {
   DEC: "Decoding",
   CMP: "Reading Comprehension",
   SPL: "Spelling",
+  MTH: "Math",
 };
-const DOMAIN_ORDER: Domain[] = ["DEC", "CMP", "SPL"];
+const DOMAIN_ORDER: Domain[] = ["DEC", "CMP", "SPL", "MTH"];
 
 const FLAG_LABEL: Record<DomainStat["flag"], string> = {
   strength: "Relative strength",

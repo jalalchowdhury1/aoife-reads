@@ -50,7 +50,7 @@ export function ExaminerView({
             >
               🔊 Hear it again
             </button>
-            <p className="text-lg text-ink/50">Write the word on your paper ✏️</p>
+            <p className="text-lg text-ink/50">{item.childHint ?? "Write the word on your paper ✏️"}</p>
           </>
         )}
         {item.stimulus && (
